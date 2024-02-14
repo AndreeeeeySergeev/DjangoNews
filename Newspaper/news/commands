@@ -1,0 +1,126 @@
+Windows PowerShell
+(C) Корпорация Майкрософт, 2009. Все права защищены.
+
+PS C:\Projects\DjangoNews> venv\scripts\activate
+(venv) PS C:\Projects\DjangoNews> cd Newspaper
+(venv) PS C:\Projects\DjangoNews\Newspaper> python manage.py shell
+Python 3.8.10 (tags/v3.8.10:3d8993a, May  3 2021, 11:48:03) [MSC v.1928 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> from news.models import *
+>>> U1=User.objects.create_user(username='Андрей')
+>>> U1
+<User: Андрей>
+>>> U2=User.objects.create_user(username='Фёдор')
+>>> U2
+<User: Фёдор>
+>>> Author.objects.create(user=U1)
+<Author: Author object (1)>
+>>> Author.objects.create(user=U2)
+<Author: Author object (2)>
+>>> Category.objects.create(category_name='Спорт')
+<Category: Category object (1)>
+>>> Category.objects.create(category_name='Политика')
+<Category: Category object (2)>
+>>> Category.objects.create(category_name='Погода')
+<Category: Category object (3)>
+>>> Category.objects.create(category_name='Экономика')
+<Category: Category object (4)>
+>>> author=Author.objects.get(id=1)
+>>> author
+<Author: Author object (1)>
+
+>>> Post.objects.create(author=author, Category_choices='NW', title='Интервью Владимира Путина', text='Когда Путина спросили, допускает ли Москва возможность конфликта с другими странами членами
+НАТО Польшой и Латвией или любого другого конфликта на европейском континенте, он сказал, что об этом ""не может быть и речи""')
+<Post: Post object (1)>
+>>> author2=Author.objects.get(id=2)
+>>> author2
+<Author: Author object (2)>
+>>> Post.objects.create(author=author2, Category_choices='ST', title='Футбол', text='Футбол (англ. football от foot «ступня» + ball «мяч») — командный вид спорта, в котором целью является забить
+мяч в ворота соперника ногами или другими частями тела (кроме рук) большее количество раз, чем команда соперника. В настоящее время самый популярный и массовый вид спорта в мире')
+<Post: Post object (2)>
+>>> Post.objects.create(author=author2, Category_choices='ST', title='Погода', text='Сегодня 5 февраля, погода -17°C. Незначительная облачность, ветер тихий, северо-западный 0.4 м/с. Атмосферное
+давление 693 мм рт. ст. Относительная влажность воздуха 65%. Подробнее Завтра ночью температура воздуха понизится до -25°C, ветер изменится на западный 0.6 м/с. Давление понизится и составит 692
+мм рт. ст. Температура днем не поднимется выше отметки -14°C, a ночью 07 февраля не опустится ниже -24°C. Ветер будет юго-западный в пределах 1.5 м/с')
+<Post: Post object (3)>
+>>> Post.objects.get(id=1).title
+'Интервью Владимира Путина'
+>>> Post.objects.get(id=1).postCategory.add(Category.objects.get(id=2))
+>>> Post.objects.get(id=2)
+<Post: Post object (2)>
+>>> Post.objects.get(id=2).title
+'Футбол'
+>>> Post.objects.get(id=2).postCategory.add(Category.objects.get(id=1))
+>>> Post.objects.get(id=3).title
+'Погода'
+>>> Post.objects.get(id=3).postCategory.add(Category.objects.get(id=3))
+
+
+>>> Comment.objects.create(comment=Post.objects.get(id=1), commentUser=Author.objects.get(id=1).user, commentText='Интересно, что будет дальше!')
+<Comment: Comment object (1)>
+
+>>> Comment.objects.create(comment=Post.objects.get(id=1), commentUser=Author.objects.get(id=2).user, commentText='Вау! Вот это новость!')
+<Comment: Comment object (2)>
+>>> Comment.objects.create(comment=Post.objects.get(id=2), commentUser=Author.objects.get(id=1).user, commentText='Хмм... Интересно')
+<Comment: Comment object (3)>
+>>> Comment.objects.create(comment=Post.objects.get(id=3), commentUser=Author.objects.get(id=2).user, commentText='Ну после -40, это уже лето какое-то')
+<Comment: Comment object (4)>
+>>> Comment.objects.get(id=1).like()
+>>> Comment.objects.get(id=1).rating
+1
+>>> Comment.objects.get(id=2).dislike()
+>>> Comment.objects.get(id=2).rating
+-1
+>>> Post.objects.get(id=1).like
+<bound method Post.like of <Post: Post object (1)>>
+>>> Post.objects.get(id=1).like()
+>>> Post.objects.get(id=3).dislike()
+True
+>>> Post.objects.get(id=3).like()
+>>> Post.objects.get(id=3).rating
+1
+>>> Post.objects.get(id=3).dislike()
+>>> Post.objects.get(id=3).rating
+0
+>>> Post.objects.get(id=3).dislike()
+True
+>>> Comment.objects.get(id=2).rating
+-1
+>>> Comment.objects.get(id=2).dislike()
+False
+>>> Post.objects.get(id=2).like()
+>>> Author.objects.get(id=1)
+<Author: Author object (1)>
+>>> Author.objects.get(id=1).update_rating()
+>>> Author.objects.get(id=1).Author_rating
+4
+>>> Author.objects.get(id=2).update_rating()
+>>> Author.objects.get(id=2).Author_rating
+2
+>>> a=Author.objects.order_by('-Author_rating')[:1]
+>>> a
+<QuerySet [<Author: Author object (1)>]>
+
+>>> for i in a:
+...     i.Author_rating
+...     i.user.username
+...
+4
+'Андрей'
+>>> b=Post.objects.order_by('-postCategory')
+>>> b
+<QuerySet [<Post: Post object (3)>, <Post: Post object (1)>, <Post: Post object (2)>]>
+>>> b=Post.objects.order_by('-postCategory')[:1]
+>>> b=Post.objects.order_by('-postCategory')[:1]
+>>> b
+<QuerySet [<Post: Post object (3)>]>
+'
+>>> for i in b:
+...     i.author.user.username
+...     i.date
+...     i.rating
+...     i.title
+...     i.preview()
+...
+
+...

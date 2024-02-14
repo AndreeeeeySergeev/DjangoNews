@@ -1,0 +1,34 @@
+{% extends 'templates/flatpages'%}
+
+{% block title %}
+News
+{% endblock title %}
+
+{% block content %}
+    <h1> Все новости </h1>
+    <h3>{{ time_now|date:'M d Y' }}</h3>
+    <h3>{{ next_news|default_if_none: "Пока нет важных новостей!" }}</h3>
+    <hr>
+    {% if news %}
+        <table>
+            <tr>
+                <td>Название</td>
+                <td>Автор</td>
+                <td>Категория</td>
+                <td>Текс</td>
+                <td>Рейтинг</td>
+            </tr>
+            {% for newsid in news %}
+            <tr>
+                <td>{{ newsid.title }}</td>
+                <td>{{ newsid.author }}</td>
+                <td>{{ newsid.postCategory }}</td>
+                <td>{{ newsid.text|truncatewords: 10}}</td>
+                <td>{{ newsid.rating}}</td>
+            </tr>
+            [% endfor%}
+        </table>
+    {% else %}
+        <h2> Новостей нет!</h2>
+    {% endif %}
+{% endblock content %}
