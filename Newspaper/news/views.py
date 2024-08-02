@@ -5,7 +5,9 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from .models import Post
 from .filters import PostFilter
 from .forms import PostForm, ArtcileForm
+from django.contrib.auth. mixins import LoginRequiredMixin
 from datetime import datetime
+
 
 # Create your views here.
 class NewsList(ListView):
@@ -52,7 +54,7 @@ class NewsDetail(DetailView):
 #
 # 	return render(request, 'News_create.html', {'form': form})
 
-class NewsCreate(CreateView):
+class NewsCreate(LoginRequiredMixin, CreateView):
 	form_class = PostForm
 	model = Post
 	template_name = 'News_create.html'
