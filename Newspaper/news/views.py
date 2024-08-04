@@ -5,11 +5,14 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from .models import Post
 from .filters import PostFilter
 from .forms import PostForm, ArtcileForm
-from django.contrib.auth. mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
+# from django.contrib.auth.decorators import login_required
+
 from datetime import datetime
 
 
 # Create your views here.
+
 class NewsList(ListView):
 	model = Post
 	ordering = 'dateCreation'
@@ -56,6 +59,7 @@ class NewsDetail(DetailView):
 
 class NewsCreate(LoginRequiredMixin, CreateView):
 	form_class = PostForm
+	raise_exception = True
 	model = Post
 	template_name = 'News_create.html'
 
@@ -63,6 +67,11 @@ class NewsCreate(LoginRequiredMixin, CreateView):
 		post = form.save(commit=False)
 		post.categoryType = 'NEWS'
 		return super().form_valid(form)
+
+
+	# @login_required
+	# def show_protected_page(request):
+		# pass
 
 
 class NewsUpdate(UpdateView):
