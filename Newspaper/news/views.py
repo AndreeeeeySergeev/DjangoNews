@@ -5,7 +5,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from .models import Post
 from .filters import PostFilter
 from .forms import PostForm, ArtcileForm
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 # from django.contrib.auth.decorators import login_required
 
 from datetime import datetime
@@ -19,6 +19,21 @@ class NewsList(ListView):
 	template_name = 'Newspaper.html'
 	context_object_name = 'Newspaper'
 	paginate_by = 10
+
+class NewsDetail(DetailView):
+	model = Post
+	template_name = 'News.html'
+	context_object_name = 'News'
+
+# def create_news(request):
+# 	form = PostForm()
+# 	if request.method == 'POST':
+# 		form = PostForm(request.POST)
+# 		if form.is_valid():
+# 			form.save()
+# 			return HttpResponseRedirect('/news/')
+#
+# 	return render(request, 'News_create.html', {'form': form})
 
 class NewsSearch(ListView):
 	model = Post
@@ -42,22 +57,10 @@ class NewsSearch(ListView):
 		context['filterset'] = self.filterset
 		return context
 
-class NewsDetail(DetailView):
-	model = Post
-	template_name = 'News.html'
-	context_object_name = 'News'
 
-# def create_news(request):
-# 	form = PostForm()
-# 	if request.method == 'POST':
-# 		form = PostForm(request.POST)
-# 		if form.is_valid():
-# 			form.save()
-# 			return HttpResponseRedirect('/news/')
-#
-# 	return render(request, 'News_create.html', {'form': form})
 
-class NewsCreate(LoginRequiredMixin, CreateView):
+class NewsCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+	permission_required = ('news.create_news',)
 	form_class = PostForm
 	raise_exception = True
 	model = Post
@@ -74,12 +77,14 @@ class NewsCreate(LoginRequiredMixin, CreateView):
 		# pass
 
 
-class NewsUpdate(UpdateView):
+class NewsUpdate(PermissionRequiredMixin, UpdateView):
+	permission_required = ('news.change_news',)
 	form_class = PostForm
 	model = Post
 	template_name = 'News_create.html'
 
-class NewsDelete(DeleteView):
+class NewsDelete(PermissionRequiredMixin, DeleteView):
+	permission_required = ('news.delete_news',)
 	model = Post
 	template_name = 'News_delete.html'
 	success_url = reverse_lazy('News_list')

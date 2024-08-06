@@ -14,8 +14,17 @@
 
 <h3>{% current_time '%b %d %Y' %}</h3>
 <h3>{{ next_publication|default_if_none:'Следующие новости завтра!' }}</h3>
+<form action="" method="get">
+        {{ filterset.form.as_p }}
+        <input type="submit" value="Найти" />
+    </form>
 
 <hr>
+
+    {% if perms.news.create_news %}
+    <a href="{% url 'News_create' %}">Добавить новость</a>
+    {% endif %}
+
     {% if Newspaper %}
         <table>
             <tr>
@@ -24,6 +33,10 @@
                 <td>Текст</td>
                 <td>Автор</td>
                 <td>Рейтинг</td>
+                {% if perms.news.change_news or perms.news.delete_news %}
+                <td>Действия</td>
+                {% endif %}
+
             </tr>
             {% for newspaper in Newspaper %}
             <tr>
@@ -32,6 +45,14 @@
                 <td>{{ newspaper.text|truncatewords:20 }}</td>
                 <td>{{ newspaper.author }}</td>
                 <td>{{ newspaper.rating }}</td>
+                <td>
+                    {% if perms.news.change_news %}
+                    <a href="{% url 'News_update' pk=newspaper.id %}">Изменить</a>
+                    {% endif %}
+                    {% if perms.news.delete_news %}
+                    <a href="{% url 'News_delete' newspaper.id %}">Удалить</a>
+                    {% endif %}
+                </td>
             </tr>
             {% endfor %}
         </table>
