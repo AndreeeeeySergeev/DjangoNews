@@ -155,6 +155,25 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory' #'none', 'optional'
 
 ACCOUNT_FORMS = {'signup': 'accounts.forms.CustomSignupForm'}
+
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'SergeevAndreyAleksandrovich@yandex.ru'
+EMAIL_HOST_PASSWORD = 'xfcrdtqomzhsurrt'
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
+DEFAULT_FROM_EMAIL = 'SergeevAndreyAleksandrovich@yandex.ru'
+SERVER_EMAIL = 'SergeevAndreyAleksandrovich@yandex.ru'
+MANAGERS = (
+    ('Ivan', 'ivan@yandex.ru'),
+    ('Peter', 'Peter@yandex.ru'),
+)
+ADMINS = (
+    ('Anton', 'Anton@example.ru'),
+    ('Aleksey', 'Aleksey@examlpe.ru')
+)
