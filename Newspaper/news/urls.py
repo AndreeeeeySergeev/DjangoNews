@@ -12,4 +12,5 @@ urlpatterns = [
 	path('article/create', ArticleCreate.as_view(), name='Article_create'),
 	path('article/<int:pk>/edit', ArticleUpdate.as_view(), name='Article_update'),
 	path('article/<int:pk>/delete', ArticleDelete.as_view(), name='Article_delete'),
+	path('subscriptions/', subscriptions, name='subscriptions'),
 ]

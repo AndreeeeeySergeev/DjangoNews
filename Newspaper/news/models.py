@@ -69,6 +69,10 @@ class Post(models.Model):
 	def get_absolut_url(self):
 		return reverse('News_detail', args=[str(self.id)])
 
+class Subscription(models.Model):
+	user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='subscriptions')
+	category = models.ForeignKey(to='Category', on_delete=models.CASCADE, related_name='subscriptions')
+
 class Comment(models.Model):
 	text = models.TextField()
 	dateCreation = models.DateTimeField(auto_now_add=True)
