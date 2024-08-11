@@ -44,10 +44,12 @@ INSTALLED_APPS = [
     'news',
     'accounts',
     'django_filters',
+    'django_apscheduler',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.yandex',
+
 ]
 
 

@@ -1,0 +1,93 @@
+
+>>> from news.models import *
+>>> U1 = User.objects.create_user(username='Андрей')
+>>> U1
+<User: Андрей>
+>>> U2 = User.objects.create_user(username='Владимир')
+>>> U2
+<User: Владимир>
+>>> Author.objects.create(authorUser=U1)
+<Author: Author object (1)>
+>>> Author.objects.create(authorUser=U2)
+<Author: Author object (2)>
+>>> Category.objects.create(name='Спорт')
+<Category: Category object (1)>
+>>> Category.objects.create(name='Политика')
+<Category: Category object (2)>
+>>> Category.objects.create(name='Погода')
+<Category: Category object (3)>
+>>> Category.objects.create(name='СВО')
+<Category: Category object (4)>
+>>> author1=Author.objects.get(id=1)
+>>> author1
+<Author: Author object (1)>
+>>> author2=Author.objects.get(id=2)
+>>> author2
+<Author: Author object (2)>
+>>> Post.objects.create(author=author1, title='Финал Евро 2024', text='Испания обыграла Англию со счетом 2:1', categoryType= 'NW')
+<Post: Post object (1)>
+>>> Post.objects.create(author=author2, categoryType='AR', title='Президент России избран на второй срок', text='Президент России В.В. Путин выбран на второй срок, который продлится до 2030 года'
+)
+<Post: Post object (2)>
+>>> Post.objects.create(author=author1, categoryType='AR', title='Погода на завтра', text='Завтра ожидается погода без существенных осадков, ясная. Днем температура поднимется до +37, ночью до +1
+9')
+<Post: Post object (3)>
+>>> Post.objects.get(id=1).title
+'Финал Евро 2024'
+>>> Post.objects.get(id=1).postCategory.add(Category.objects.get(id=1))
+>>> Post.objects.get(id=1).title
+'Финал Евро 2024'
+>>> Post.objects.get(id=2).title
+'Президент России избран на второй срок'
+>>> Post.objects.get(id=2).postCategory.add(Category.objects.get(id=2))
+>>> Category.objects.get(id=3).name
+'Погода'
+>>> Category.objects.get(id=2).name
+'Политика'
+>>> Category.objects.get(id=1).name
+'Спорт'
+>>> Post.objects.get(id=3).postCategory.add(Category.objects.get(id=3))
+>>> Comment.objects.create(commentPost=Post.objects.get(id=1), commentUser=Author.objects.get(id=1).authorUser, text='Я так рад, что Испания выиграла, наконец-то!')
+<Comment: Comment object (1)>
+>>> Comment.objects.create(commentPost=Post.objects.get(id=2), commentUser=Author.objects.get(id=1).authorUser, text='Ура!!!')
+<Comment: Comment object (2)>
+>>> Comment.objects.create(commentPost=Post.objects.get(id=1), commentUser=Author.objects.get(id=2).authorUser, text='А я болел за Англию, как жаль(')
+<Comment: Comment object (3)>
+>>> Comment.objects.create(commentPost=Post.objects.get(id=3), commentUser=Author.objects.get(id=2).authorUser, text='Ух как жарко!')
+<Comment: Comment object (4)>
+>>> Comment.objects.get(id=1).like()
+>>> Comment.objects.get(id=3).dislike()
+>>> Comment.objects.get(id=1).rating
+1
+>>> Post.objects.get(id=1).like()
+>>> Post.objects.get(id=3).dislike()
+>>> Post.objects.get(id=1).rating
+1
+>>> Author.objects.get(id=1).update_rating()
+>>> Author.objects.get(id=1).ratingAuthor
+1
+>>> a=Author.objects.order_by('-ratingAuthor')[:1]
+>>> a
+<QuerySet [<Author: Author object (1)>]>
+>>> for i in a:
+...     i.ratingAuthor
+...     i.authorUser.username
+...
+1
+'Андрей'
+>>> b=Post.objects.order_by('-postCategory')[:1]
+>>> b
+<QuerySet [<Post: Post object (3)>]>
+>>> for i in b:
+...     i.dateCreation
+...     i.author
+...     i.rating
+...     i.title
+...     i.preview()
+...
+datetime.datetime(2024, 7, 15, 3, 55, 0, 656503, tzinfo=datetime.timezone.utc)
+<Author: Author object (1)>
+-1
+'Погода на завтра'
+'Завтра ожидается погода без существенных осадков, ясная. Днем температура поднимется до +37, ночью до +19...'
+>>>

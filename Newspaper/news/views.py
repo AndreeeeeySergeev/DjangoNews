@@ -27,10 +27,7 @@ def subscriptions(request):
 		if action == 'subscribe':
 			Subscription.objects.create(user=request.user, category=category)
 		elif action == 'unsubscribe':
-			Subscription.objects.filter(
-				user=request.user,
-				category=category
-			).delete()
+			Subscription.objects.filter(user=request.user, category=category).delete()
 	categories_with_subscriptions = Category.objects.annotate(
 		user_subscribed=Exists(
 			Subscription.objects.filter(
