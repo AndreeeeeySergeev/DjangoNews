@@ -1,11 +1,11 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, m2m_changed
 from django.dispatch import receiver
 from .models import Post
 from django.contrib.auth.models import User
 from django.core.mail import EmailMultiAlternatives
 
 
-@receiver(post_save, sender=Post)
+@receiver(m2m_changed, sender=Post)
 def post_created(instance, created, **kwargs):
 	if not created:
 		return
