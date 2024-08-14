@@ -27,6 +27,8 @@ class Author(models.Model):
 
 class Category(models.Model):
 	name = models.CharField(max_length=64, unique=True)
+	subscribers = models.ManyToManyField(User, related_name='categories')
+
 
 	def __str__(self):
 		return self.name.title()
@@ -60,11 +62,11 @@ class Post(models.Model):
 	# 	elif self.rating > 10:
 	# 		return self.rating == 10
 
-	# def preview(self):
-	# 	return self.text[0:123] + "..."
+	def preview(self):
+		return self.text[0:123] + "..."
 
-	def __str__(self):
-		return f'{self.title.title()}: {self.text[:20]}'
+	# def __str__(self):
+	# 	return f'{self.title.title()}: {self.text[:20]}'
 
 	def get_absolut_url(self):
 		return reverse('News_detail', args=[str(self.id)])

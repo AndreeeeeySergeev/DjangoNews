@@ -1,4 +1,6 @@
+import datetime
 import logging
+
 
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
@@ -8,25 +10,35 @@ from django.core.management.base import BaseCommand
 from django_apscheduler import util
 from django_apscheduler.jobstores import DjangoJobStore
 from django_apscheduler.models import DjangoJobExecution
+from django.template.loader import render_to_string
+from Newspaper.settings import *
 
 
-from Newspaper.news.models import Post, Subscription
+from news.models import Post, Subscription, Category
 
 logger = logging.getLogger(__name__)
 
 
-def my_job(request):
-    user = super().save(request)
-    post = Post.objects.order_by('dateCreation')[:1]
-    text = '\n'.join(['{} - {}'.format(p.title, p.dateCreation) for p in post])
-    subject = 'Свежие новости!'
-    html = (
-        f'<b>{user.subscriptions__user}</b> у вас новая новость! '
-        f'<a href="http://127.0.0.1:8000/news/">сайте</a>!'
+def my_job():
+    today = datetime.datetime.now()
+    last_week = today - datetime.timedelta(days=7)
+    post = Post.objects.filter(dateCreation__gte=last_week)
+    categories = set(post.values_list('postCategory__name', flat=True))
+    subscribers = set(Category.objects.filter(name__in=categories).values_list
+                      ('subscribers__email', flat=True))
+
+    subject = 'Свежие новости!',
+
+    html = render_to_string(
+       'daily_post.html',
+        {
+            'link': f'http://127.0.0.1:8000',
+            'post': post,
+        }
     )
     msg = EmailMultiAlternatives(
-        subject=subject, body=text, from_email=None, to=[user.subscriptions__user.email]),
-    msg.attach_alternative(html, "text/html"),
+        subject=subject, body='', from_email=settings.DEFAULT_FROM_EMAIL, to=subscribers,)
+    msg.attach_alternative(html, "text/html")
     msg.send()
 
 

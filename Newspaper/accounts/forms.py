@@ -6,11 +6,11 @@ from django.contrib.auth.models import Group
 from django.core.mail import send_mail, EmailMultiAlternatives, mail_managers, mail_admins
 
 class CustomSignupForm(SignupForm):
-	def save(self, request):
-		user = super().save(request)
-		common_users = Group.objects.get(name="common users")
-		user.groups.add(common_users)
-		return user
+	# def save(self, request):
+	# 	user = super().save(request)
+	# 	common_users = Group.objects.get(name="common users")
+	# 	user.groups.add(common_users)
+	# 	return user
 
 	# def email_send(self, request):
 	# 	user = super().save(request)
