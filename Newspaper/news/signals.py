@@ -4,6 +4,7 @@ from .models import Post, PostCategory
 from django.contrib.auth.models import User
 from django.core.mail import EmailMultiAlternatives
 from Newspaper.settings import *
+
 def send_notifications(preview, pk, title, subscribers):
 	html_context = render_to_string(
 		'post_created_email.html',
@@ -19,6 +20,7 @@ def send_notifications(preview, pk, title, subscribers):
 	)
 	msg.attach_alternative(html_context, 'text/html')
 	msg.send()
+
 # @receiver(m2m_changed, sender=PostCategory)
 # def post_created(instance, sender, **kwargs):
 # 	if kwargs['action'] == 'post_add':
