@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.core.mail import EmailMultiAlternatives
 from Newspaper.settings import *
 
-def send_notifications(preview, pk, title, subscribers):
+def send_notifications(preview, pk, subscribers):
 	html_context = render_to_string(
 		'post_created_email.html',
 		{'text': preview,
@@ -21,17 +21,17 @@ def send_notifications(preview, pk, title, subscribers):
 	msg.attach_alternative(html_context, 'text/html')
 	msg.send()
 
-# @receiver(m2m_changed, sender=PostCategory)
-# def post_created(instance, sender, **kwargs):
-# 	if kwargs['action'] == 'post_add':
-# 		categories = instance.category.all()
-# 		subscribers: list[str] = []
-# 		for category in categories:
-# 			subscribers += category.subscribers.all()
-#
-# 		subscribers = [s.email for s in subscribers]
-#
-# 		send_notifications(instance.preview(), instance.pk, instance.title, subscribers)
+@receiver(m2m_changed, sender=Post)
+def post_created(instance, sender, **kwargs):
+	if kwargs['action'] == 'post_add':
+		categories = instance.category.all()
+		subscribers: list[str] = []
+		for category in categories:
+			subscribers += category.subscribers.all()
+
+		subscribers = [s.email for s in subscribers]
+
+		send_notifications(instance.preview(), instance.pk, instance.title, subscribers)
 #
 # 	emails = User.objects.filter(subscriptions__category=instance.categoryType).values_list('email', flat=True)
 # 	subject = f'Новая новость в категории {instance.category}'

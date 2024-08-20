@@ -10,11 +10,17 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_protect
 from django.shortcuts import render
 from django.db.models import Exists, OuterRef
+from django.views import View
+# from .tasks import hello
 
 from datetime import datetime
 
 
 # Create your views here.
+# class IndexView(View):
+# 	def get(self, request):
+# 		hello.delay()
+# 		return HttpResponse('Hello!')
 
 @login_required
 @csrf_protect
