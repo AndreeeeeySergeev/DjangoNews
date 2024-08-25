@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models import Sum
 from django.urls import reverse
 from django.core.validators import MinValueValidator
+from django.core.cache import cache
 
 # Create your models here.
 
@@ -70,6 +71,11 @@ class Post(models.Model):
 
 	def get_absolut_url(self):
 		return reverse('News_detail', args=[str(self.id)])
+
+	def save(self, *args, **kwargs):
+		super().save(*args, **kwargs)
+		cache.delete(f'post-{self.pk}')
+
 
 class Subscription(models.Model):
 	user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='subscriptions')

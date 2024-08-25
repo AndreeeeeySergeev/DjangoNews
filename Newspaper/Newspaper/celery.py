@@ -15,13 +15,7 @@ app.conf.beat_schedule = {
     'schedule': crontab(hour=8, minute=0, day_of_week='monday'),
     },
 }
-
-app.conf.beat_schedule = {
-    'action_monday_8pm': {
-    'task': 'news.tasks.news_of_week',
-    'schedule': crontab(hour=8, minute=0, day_of_week='monday'),
-    },
-}
+# @app.task
 
 # app.conf.beat_schedule = {
 #     'action_monday_8pm': {

@@ -13,9 +13,12 @@ News
                 <td>Текст</td>
             </tr>
             <tr>
+                {% load cache %}
+                {% cache 300 News %}
                 <td>{{ News.title|censor }}</td>
                 <td>{{ News.dateCreation|date:'d M Y' }}</td>
                 <td>{{ News.text|censor }}</td>
+                {% endcache %}
             </tr>
         </table>
 {% endblock content %}

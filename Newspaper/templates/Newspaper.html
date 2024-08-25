@@ -25,6 +25,8 @@
     <a href="{% url 'News_create' %}">Добавить новость</a>
     {% endif %}
 
+    {% load cache %}
+    {% cache 100 Newspaper %}
     {% if Newspaper %}
         <table>
             <tr>
@@ -59,6 +61,7 @@
     {% else %}
         <h2> Новостей нет </h2>
     {% endif %}
+    {% endcache %}
 
     {% if page_obj.has_previous %}
         <a href="?{% url_replace page=1 %}">1</a>

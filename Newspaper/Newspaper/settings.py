@@ -65,6 +65,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
      # 'allauth.account.middleware.AccountMiddleware', #  it is working only from version 0.56+, 0.54 is using
+    'django.middleware.cache.UpdateCacheMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
 ]
 
 ROOT_URLCONF = 'Newspaper.urls'
@@ -93,6 +96,18 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.path.join(BASE_DIR, 'cache_files'),
+        'TIMEOUT': 300  # для всего сайта
+        # '172.19.26.240:11211',                                      # 'django.core.cache.backends.db.DatabaseCache'
+                                                                    # 'django.core.cache.backends.dummy.DummyCache'
+                                                                    # 'django.core.cache.backends.locmem.LocMemCache'
+                                                                    # 'django.core.cache.backends.memcached.MemcachedCache'
+                                                                    # 'django.core.cache.backends.memcached.PyLibMCCache'
+        }
+    }
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -101,6 +116,12 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache', # 'django.core.cache.backends.db.DatabaseCache'
+                                                                    # 'django.core.cache.backends.dummy.DummyCache'
+                                                                    # 'django.core.cache.backends.filebased.FileBasedCache'
+                                                                    # 'django.core.cache.backends.locmem.LocMemCache'
+                                                                    # 'django.core.cache.backends.memcached.MemcachedCache'
+                                                                    # 'django.core.cache.backends.memcached.PyLibMCCache'
     }
 }
 
@@ -188,6 +209,7 @@ CELERY_RESULT_BACKEND = 'redis://localhost:6379'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'Europe/Moscow'
+CELERY_TIMEZONE = 'Asia/Chita'
 CELERY_TASK_TIME_LIMIT = 30 * 60
 ## Redis Lab CELERY_BROKER_URL CELERY_RESULT_BACKEND = 'redis://пароль@endpoint:port'
+

@@ -12,6 +12,10 @@ from django.shortcuts import render
 from django.db.models import Exists, OuterRef
 from django.views import View
 # from .tasks import hello
+from django.views.decorators.cache import cache_page
+from django.core.cache import cache
+
+
 
 from datetime import datetime
 
@@ -24,6 +28,7 @@ from datetime import datetime
 
 @login_required
 @csrf_protect
+@cache_page(60*5)
 def subscriptions(request):
 	if request.method == 'POST':
 		category_id = request.POST.get('category_id')
@@ -55,6 +60,13 @@ class NewsDetail(DetailView):
 	model = Post
 	template_name = 'News.html'
 	context_object_name = 'News'
+
+	def get_news(self, *args, **kwargs):
+		news = cache.get(f'post-{self.kwargs["pk"]}', None)
+		if not news:
+			news = super().get_object(queryset=self.queryset)
+			cache.set(f'post-{self.kwargs["pk"]}', news)
+		return news
 
 # def create_news(request):
 # 	form = PostForm()
@@ -136,6 +148,15 @@ class ArticleUpdate(PermissionRequiredMixin, UpdateView):
 	form_class = ArtcileForm
 	model = Post
 	template_name = 'Article_create.html'
+
+	def get_article(self, *args, **kwargs):
+		article = cache.get(f'post-{self.kwargs["pk"]}', None)
+		if not article:
+			article = super().get_object(queryset=self.queryset)
+			cache.set(f'post-{self.kwargs["pk"]}', article)
+		return article
+
+
 
 class ArticleDelete(PermissionRequiredMixin, DeleteView):
 	permission_required = ('news.delete_article',)
