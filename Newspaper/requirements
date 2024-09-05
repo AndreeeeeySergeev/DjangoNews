@@ -4,3 +4,4 @@ django-allauth
 django-apscheduler
 celery
 redis
+pylint,flake8
