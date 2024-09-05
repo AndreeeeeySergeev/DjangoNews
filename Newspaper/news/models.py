@@ -49,6 +49,10 @@ class Post(models.Model):
 	postCategory = models.ManyToManyField(Category, through='PostCategory')
 	rating = models.SmallIntegerField(default=0)
 
+	@property
+	def on_rating(self):
+		return self.rating > 0
+
 	def like(self):
 		self.rating += 1
 		self.save()

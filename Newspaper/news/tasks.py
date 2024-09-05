@@ -12,7 +12,7 @@ def send_notifications():
 	html_context = render_to_string(
 		'post_created_email.html',
 		{'text': preview,
-		 'link': f'http://127.0.0.1:8000/news/{pk}'}
+		 'link': f'https://127.0.0.1:8000/news/{pk}'}
 	)
 
 	msg = EmailMultiAlternatives(
@@ -51,7 +51,7 @@ def news_sender():
 	html = render_to_string(
 		'daily_post.html',
 		{
-			'link': f'http://127.0.0.1:8000',
+			'link': f'https://127.0.0.1:8000',
 			'post': post,
 			}
 		)
