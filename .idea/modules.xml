@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/DjangoNews.iml" filepath="$PROJECT_DIR$/.idea/DjangoNews.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../postgresQL/.idea/postgresQL.iml" filepath="$PROJECT_DIR$/../postgresQL/.idea/postgresQL.iml" />
       <module fileurl="file://$PROJECT_DIR$/../project_name/.idea/project_name.iml" filepath="$PROJECT_DIR$/../project_name/.idea/project_name.iml" />
       <module fileurl="file://$PROJECT_DIR$/../tutorial/.idea/tutorial.iml" filepath="$PROJECT_DIR$/../tutorial/.idea/tutorial.iml" />
     </modules>

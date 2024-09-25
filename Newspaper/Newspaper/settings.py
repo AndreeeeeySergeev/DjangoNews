@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 import allauth
+import logging
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,6 +26,7 @@ SECRET_KEY = 'django-insecure-r+vh)afv)+gpjlp+$036maw(s2dph%li^dh7$^neo9g3%t=ogm
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
 
 ALLOWED_HOSTS = []
 
@@ -66,7 +68,6 @@ MIDDLEWARE = [
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
      # 'allauth.account.middleware.AccountMiddleware', #  it is working only from version 0.56+, 0.54 is using
     'django.middleware.cache.UpdateCacheMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.cache.FetchFromCacheMiddleware',
 ]
 
@@ -122,6 +123,13 @@ DATABASES = {
                                                                     # 'django.core.cache.backends.locmem.LocMemCache'
                                                                     # 'django.core.cache.backends.memcached.MemcachedCache'
                                                                     # 'django.core.cache.backends.memcached.PyLibMCCache'
+# 'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'postgres',
+#         'USER': 'postgres',
+#         'PASSWORD': '',
+#         'HOST': 'localhost',
+#         'PORT': '5432
     }
 }
 
@@ -213,3 +221,101 @@ CELERY_TIMEZONE = 'Asia/Chita'
 CELERY_TASK_TIME_LIMIT = 30 * 60
 ## Redis Lab CELERY_BROKER_URL CELERY_RESULT_BACKEND = 'redis://пароль@endpoint:port'
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'style': '{',
+    'formatters': {
+        'simple': {
+            'format': '%(levelname)s %(message)s' # 'verbose': {
+    													# 'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+    },
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler'
+        }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'propagate': True,
+        },
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': False,
+        }
+    }
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+	'style': '{',
+	'formatters': {
+		'verbose_simple': {
+			'format': '%(asctime)% %(levelname)s %(message)s',
+			'datetime': '%Y.%m.%d %H:%M:%S',
+			},
+		'verbose': {
+			'format': '%(asctime)% %(levelname)s %(pathname)s %(message)s',
+			'datetime': '%Y.%m.%d %H:%M:%S',
+			}
+		},
+	'filters': {
+		'require_debug_true': {
+			'()': 'django.utils.log.RequireDebugTrue'
+			},
+		'require_debug_false':{
+			'()': 'django.utils.log.RequireDebugFalse'
+			}
+		},
+	'handlers': {
+		'console': {
+			'level': 'DEBUG',
+			'filter': 'require_debug_true' ,
+			'class': 'logging.StreamHandler',
+			'formatter': 'verbose_simple',
+			},
+		'console1': {
+			'level': 'WARNING',
+			'filter': 'require_debug_true',
+			'class': 'logging.StreamHandler',
+			'formatter': 'verbose',
+			}
+
+		},
+	'loggers': {
+		'django': {
+
+			},
+		'django.request': {
+
+			},
+		'django.server': {
+
+			},
+		'django.template': {
+
+			},
+		'django.db.backends': {
+
+			},
+		'django.security': {
+
+			}
+		}
+	}
