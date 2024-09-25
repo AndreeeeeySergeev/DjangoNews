@@ -14,11 +14,12 @@ from django.views import View
 # from .tasks import hello
 from django.views.decorators.cache import cache_page
 from django.core.cache import cache
-
+import logging
 
 
 from datetime import datetime
 
+logger = logging.getLogger(__name__)
 
 # Create your views here.
 # class IndexView(View):
