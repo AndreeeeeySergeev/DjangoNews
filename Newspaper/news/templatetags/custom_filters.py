@@ -22,6 +22,6 @@ def hide_forbidden(value):
 	for word in words:
 		if word in BAD_WORDS:
 			result.append(word[0] + "*"*(len(word)-2) + word[-1])
-        else:
-		result.append(word)
+		else:
+			result.append(word)
 	return " ".join(result)

@@ -1,7 +1,14 @@
 from django.contrib import admin
 from .models import Author, Post, Comment, Category
+from modeltranslation.admin import TranslationAdmin
 
-def nullfy_quantity(modeladmin, request, queryset):
+class PostTranslation(TranslationAdmin):
+	model = Post
+
+class CategoryTranslation(TranslationAdmin):
+	model = Category
+
+def nullfy_quantity(ModelAdmin, request, queryset):
 	queryset.update(quantity=0)
 nullfy_quantity.short_description = 'Обнулить новости'
 
@@ -13,7 +20,7 @@ class PostAdmin(admin.ModelAdmin):
 	actions = [nullfy_quantity]
 
 class CategoryAdmin(admin.ModelAdmin):
-	list_display = [field.name for field in Category.__meta.get_fields()]
+	list_display = [field.name for field in Category._meta.get_fields()]
 	list_filter = ('name', 'subscribers')
 
 class CommentAdmin(admin.ModelAdmin):
@@ -21,7 +28,7 @@ class CommentAdmin(admin.ModelAdmin):
 	list_filter = ('text', 'dateCreation')
 
 class AuthorAdmin(admin.ModelAdmin):
-	list_display = [field.name for field in Author.__meta.get_fields()]
+	list_display = [field.name for field in Author._meta.get_fields()]
 	list_filter = ('authorUser')
 
 admin.site.register(Author)

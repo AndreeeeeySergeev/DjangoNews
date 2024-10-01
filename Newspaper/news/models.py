@@ -5,7 +5,8 @@ from django.db.models import Sum
 from django.urls import reverse
 from django.core.validators import MinValueValidator
 from django.core.cache import cache
-
+from django.utils.translation import gettext as _
+from django.utils.translation import pgettext_lazy
 # Create your models here.
 
 
@@ -46,7 +47,8 @@ class Post(models.Model):
 	text = models.TextField()
 	dateCreation = models.DateTimeField(auto_now_add=True)
 	author = models.ForeignKey(Author, on_delete=models.CASCADE)
-	categoryType = models.CharField(max_length=2, choices=CATEGORY_CHOICE, default=NEWS)
+	categoryType = models.CharField(max_length=2, choices=CATEGORY_CHOICE, default=NEWS,
+									help_text=_('category type'))
 	postCategory = models.ManyToManyField(Category, through='PostCategory')
 	rating = models.SmallIntegerField(default=0)
 
@@ -83,7 +85,8 @@ class Post(models.Model):
 
 
 class Subscription(models.Model):
-	user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='subscriptions')
+	user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='subscriptions',
+							 verbose_name=pgettext_lazy('help text for Subcription'))
 	category = models.ForeignKey(to='Category', on_delete=models.CASCADE, related_name='subscriptions')
 
 class Comment(models.Model):

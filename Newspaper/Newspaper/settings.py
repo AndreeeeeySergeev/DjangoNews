@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+	'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -60,6 +61,7 @@ SITE_ID = 1
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+	'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -69,9 +71,14 @@ MIDDLEWARE = [
      # 'allauth.account.middleware.AccountMiddleware', #  it is working only from version 0.56+, 0.54 is using
     'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.cache.FetchFromCacheMiddleware',
+	'Newspaper.Middlewares.TimezoneMiddleware',
 ]
 
 ROOT_URLCONF = 'Newspaper.urls'
+
+LOCALE_PATH = [
+	os.path.join(BASE_DIR, 'locale')
+	]
 
 TEMPLATES = [
     {
@@ -91,6 +98,10 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Newspaper.wsgi.application'
+LANGUAGES = [
+	('en-us', 'English'),
+	('ru', 'Русский'),
+	]
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -244,7 +255,7 @@ LOGGING = {
 			'datetime': '%Y.%m.%d %H:%M:%S'
 			},
 		},
-	'filters': {
+	'filter': {
 		'require_debug_true': {
 			'()': 'django.utils.log.RequireDebugTrue'
 			},
@@ -252,7 +263,7 @@ LOGGING = {
 			'()': 'django.utils.log.RequireDebugFalse'
 			}
 		},
-	'handlers': {
+	'handler': {
 		'console': {
 			'level': 'DEBUG',
 			'filter': ['require_debug_true'],
@@ -299,7 +310,7 @@ LOGGING = {
 			'format': 'verbose_again',
 			}
 		},
-	'loggers': {
+	'logger': {
 		'django': {
 			'handlers': ['console', 'console1', 'console3', 'print_in_file'],
 			'propagate': False,

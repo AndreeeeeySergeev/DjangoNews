@@ -8,13 +8,17 @@ from .forms import PostForm, ArtcileForm
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_protect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.db.models import Exists, OuterRef
 from django.views import View
 # from .tasks import hello
 from django.views.decorators.cache import cache_page
 from django.core.cache import cache
-import logging
+from django.utils.translation import gettext as _
+from django.utils.translation import activate, get_supported_language_variant
+from django.http.response import HttpResponse
+from django.utils import timezone
+import logging, pytz
 
 
 from datetime import datetime
@@ -24,12 +28,24 @@ logger = logging.getLogger(__name__)
 # Create your views here.
 # class IndexView(View):
 # 	def get(self, request):
-# 		hello.delay()
-# 		return HttpResponse('Hello!')
+# 		# hello.delay()
+# 		string = _('Hello, world!')
+# 		return HttpResponse(string)
+
+# class IndexView(View):
+# 	def get(self, request):
+# 		models = Post.objects.all()
+#
+# 		context = {
+# 			'models': models,
+# 			}
+# 		return HttpResponse(render(request, 'i18n.html', context)
+
+
 
 @login_required
 @csrf_protect
-@cache_page(60*5)
+@cache_page(60 * 15)
 def subscriptions(request):
 	if request.method == 'POST':
 		category_id = request.POST.get('category_id')
@@ -48,6 +64,21 @@ def subscriptions(request):
 		)
 	).order_by('name')
 	return render(request, 'subscriptions.html', {'categories': categories_with_subscriptions},)
+
+class IndexView(View):
+	def get(self, request):
+		models = Post.objects.all()
+
+		context = {
+			'models': models,
+			'current_time': timezone.localtime(timezone.now()),
+			'timezones': pytz.common_timezones
+			}
+		return HttpResponse(render(request, 'i18n.html', context))
+
+	def post(self, request):
+		request.session['django_timezone'] = request.POST['timezone']
+		return redirect('/')
 
 class NewsList(ListView):
 	model = Post
