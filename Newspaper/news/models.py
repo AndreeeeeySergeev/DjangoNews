@@ -51,6 +51,7 @@ class Post(models.Model):
 									help_text=_('category type'))
 	postCategory = models.ManyToManyField(Category, through='PostCategory')
 	rating = models.SmallIntegerField(default=0)
+	is_active = models.BooleanField(default=True)
 
 	@property
 	def on_rating(self):

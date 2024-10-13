@@ -18,6 +18,10 @@ from django.utils.translation import gettext as _
 from django.utils.translation import activate, get_supported_language_variant
 from django.http.response import HttpResponse
 from django.utils import timezone
+from rest_framework import viewsets
+from rest_framework import permissions
+from rest_framework.response import Response
+from .serializers import *
 import logging, pytz
 
 
@@ -42,6 +46,35 @@ logger = logging.getLogger(__name__)
 # 		return HttpResponse(render(request, 'i18n.html', context)
 
 
+class PostViewset(viewsets.ModelViewSet):
+	queryset = Post.objects.all().filter(is_active=True)
+	serializer_post = PostSerializers
+	# permission_posts = [permissions.IsAuthenticated]/[permissions.AllowAny]/[]
+	#
+	# def get_queryset(self):
+	# 	queryset = Post.objects.all()
+	# 	post_id = self.request.query_params.get('post_id', None)
+	# 	title_id = self.request.query_params.get('title_id', None)
+	# 	if post_id is not None:
+	# 		queryset = queryset.filter(post__post_id=school_id)
+	# 	if title_id is not None:
+	# 		queryset = queryset.filter(title_id=title_id)
+	# 	return queryset
+
+	# def list(self, request, format=None):
+	# 	return Response([])
+
+	def destroy(self, request, pk, format=None):
+		instance = self.get_object()
+		instance.is_active = False
+		instance.save
+		return Response(status=status.HTTP_204_NO_CONTENT)
+
+class CategoryViewset(viewsets.ModelViewSet):
+	queryset = Category.objects.all()
+	serializer_class = CategorySerializers
+	filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
+	filterset_fields = ['name']
 
 @login_required
 @csrf_protect
